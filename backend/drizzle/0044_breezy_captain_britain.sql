@@ -1,0 +1,1 @@
+ALTER TABLE `campaigns` ADD `demographics_use_old_method` boolean DEFAULT false NOT NULL;

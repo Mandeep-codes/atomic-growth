@@ -1,0 +1,1 @@
+ALTER TABLE `campaigns` ADD `is_hot_streak_enabled` boolean DEFAULT false;

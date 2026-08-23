@@ -1,0 +1,1 @@
+ALTER TABLE `demographics_verifications_v2` MODIFY COLUMN `status` enum('created','active','pending','approved','needs-human-review','rejected','cancelled') NOT NULL DEFAULT 'created';

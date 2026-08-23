@@ -1,0 +1,360 @@
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { trackEvent } from "@/lib/analytics";
+import { trpc } from "@/lib/trpc";
+import type { LucideIcon } from "lucide-react";
+import {
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  Loader2,
+  Plus,
+  ShieldCheck,
+  Trash2,
+} from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
+interface VerificationCardProps {
+  platform: "youtube" | "instagram" | "tiktok" | "x";
+  platformName: string;
+  platformIcon: LucideIcon;
+  className?: string;
+}
+
+type VerifiedAccount = {
+  id: string;
+  handle: string;
+  created_at: Date;
+  login_creds_email?: string | null;
+  login_creds_password?: string | null;
+  login_cred_forwarding_email?: string | null;
+};
+
+interface VerifiedAccountRowProps {
+  account: VerifiedAccount;
+  isRemoving: boolean;
+  onRemove: (account: VerifiedAccount) => void;
+}
+
+const VerifiedAccountRow = ({
+  account,
+  isRemoving,
+  onRemove,
+}: VerifiedAccountRowProps) => {
+  const credentialEmail = account.login_creds_email ?? undefined;
+  const credentialUsername = account.handle;
+  const credentialPassword = account.login_creds_password ?? undefined;
+  const credentialForwardingEmail =
+    account.login_cred_forwarding_email ?? undefined;
+  const [showPassword, setShowPassword] = useState(false);
+
+  return (
+    <AccordionItem
+      value={account.id}
+      className="overflow-hidden rounded-lg border border-emerald-200 bg-emerald-50 dark:bg-black "
+    >
+      <AccordionTrigger className="flex w-full items-center gap-3 border-none bg-transparent p-3 text-left hover:no-underline">
+        <div className="flex items-start gap-2">
+          {account.login_creds_email && account.login_creds_password && (
+            <ShieldCheck className="mt-0.5 h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+          )}
+          <CheckCircle2 className="mt-0.5 h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+          <div>
+            <p className="font-medium text-emerald-700 dark:text-emerald-300">
+              @{account.handle}
+            </p>
+            <p className="text-xs text-emerald-600 dark:text-emerald-400">
+              Verified on {new Date(account.created_at).toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+      </AccordionTrigger>
+      <AccordionContent className="px-3 pb-3 text-sm">
+        <div className="space-y-3">
+          {credentialEmail ? (
+            <div>
+              <p className="uppercase tracking-wide text-[10px] text-emerald-600 dark:text-emerald-400">
+                Login Email
+              </p>
+              <p className="font-mono text-sm font-semibold text-emerald-900 dark:text-emerald-300 break-all">
+                {credentialEmail}
+              </p>
+            </div>
+          ) : null}
+          {credentialPassword ? (
+            <div>
+              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                <p className="uppercase tracking-wide text-[10px]">Password</p>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 text-emerald-700 dark:text-emerald-300 hover:text-emerald-900"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                  <span className="sr-only">
+                    {showPassword ? "Hide" : "Show"} password
+                  </span>
+                </Button>
+              </div>
+              <p className="font-mono text-sm font-semibold text-emerald-900 dark:text-emerald-300 break-all">
+                {showPassword ? credentialPassword : "************"}
+              </p>
+            </div>
+          ) : null}
+          {credentialForwardingEmail ? (
+            <div>
+              <p className="uppercase tracking-wide text-[10px] text-emerald-600">
+                Forwarding Email
+              </p>
+              <p className="font-mono text-sm font-semibold text-emerald-900 dark:text-emerald-300 break-all">
+                {credentialForwardingEmail}
+              </p>
+            </div>
+          ) : null}
+          <Button
+            type="button"
+            variant="destructive"
+            size="sm"
+            className="w-full"
+            disabled={isRemoving}
+            onClick={() => onRemove(account)}
+          >
+            {isRemoving ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Trash2 className="mr-2 h-4 w-4" />
+            )}
+            Remove account
+          </Button>
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+  );
+};
+
+export const VerificationCard = ({
+  platform,
+  platformName,
+  platformIcon,
+  className,
+}: VerificationCardProps) => {
+  const Icon = platformIcon;
+  const { toast } = useToast();
+  const [removingAccountId, setRemovingAccountId] = useState<string | null>(
+    null
+  );
+  const [accountToRemove, setAccountToRemove] = useState<{
+    id: string;
+    handle: string;
+  } | null>(null);
+
+  // Check verification status
+  const {
+    data: verificationStatus,
+    refetch: refetchVerification,
+    isLoading: isStatusLoading,
+  } = trpc.verification.checkVerification.useQuery({
+    platform,
+  });
+
+  // Verify user bio mutation
+  const removeVerificationMutation =
+    trpc.verification.removeVerification.useMutation();
+
+  const handleRemoveAccount = async (accountId: string, handle: string) => {
+    trackEvent({
+      event: "social_verification_remove_account_clicked",
+      properties: {
+        platform,
+        accountId,
+        handle,
+      },
+    });
+    setRemovingAccountId(accountId);
+    try {
+      await removeVerificationMutation.mutateAsync({ id: accountId });
+      toast({
+        title: "Account removed",
+        description: `@${handle} has been disconnected.`,
+      });
+      await refetchVerification();
+      trackEvent({
+        event: "social_verification_remove_account_result",
+        properties: {
+          platform,
+          accountId,
+          handle,
+          status: "success",
+        },
+      });
+    } catch (error) {
+      toast({
+        title: "Unable to remove account",
+        description:
+          error instanceof Error ? error.message : "Please try again shortly.",
+        variant: "destructive",
+      });
+      trackEvent({
+        event: "social_verification_remove_account_result",
+        properties: {
+          platform,
+          accountId,
+          handle,
+          status: "error",
+          errorMessage:
+            error instanceof Error ? error.message : "Unknown error",
+        },
+      });
+    } finally {
+      setRemovingAccountId(null);
+    }
+  };
+
+  return (
+    <Card className={cn("rounded-3xl border-border/60", className)}>
+      <CardHeader>
+        <div className="flex items-center gap-3">
+          {/* Squared tile, not a circle — the redesign uses rounded squares for
+              every platform/campaign mark, and the lone circle here was the
+              tell that this screen predated it. */}
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-border/60 bg-muted/60 text-foreground">
+            <Icon className="h-5 w-5" />
+          </span>
+          <div>
+            <CardTitle className="display-heading text-xl">
+              {platformName}
+            </CardTitle>
+            {/* Mono uppercase caption, same as every other status line in the
+                redesign. */}
+            <CardDescription className="font-mono text-[10px] uppercase tracking-[0.14em]">
+              {isStatusLoading
+                ? "Fetching status…"
+                : verificationStatus?.verified
+                ? `${verificationStatus.verifiedAccounts?.length || 0} account${
+                    verificationStatus.verifiedAccounts?.length !== 1 ? "s" : ""
+                  } verified`
+                : "Not verified"}
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {isStatusLoading ? (
+          <div className="space-y-2">
+            {[1, 2].map((key) => (
+              <div
+                key={key}
+                className="h-16 w-full animate-pulse rounded-lg bg-muted/60"
+              />
+            ))}
+          </div>
+        ) : verificationStatus?.verified &&
+          verificationStatus.verifiedAccounts &&
+          verificationStatus.verifiedAccounts.length > 0 ? (
+          <div className="space-y-2 max-h-[420px] overflow-y-scroll">
+            <Label>Verified Accounts</Label>
+            {/* Open, and all of them at once. type="single" meant a clipper
+                with ten linked accounts had ten things to click before they
+                could see any of them — the same hunt-and-click the sidebar
+                removal was meant to end. */}
+            <Accordion
+              type="multiple"
+              defaultValue={verificationStatus.verifiedAccounts.map(
+                (account) => account.id
+              )}
+              className="space-y-2"
+            >
+              {verificationStatus.verifiedAccounts.map((account) => (
+                <VerifiedAccountRow
+                  key={account.id}
+                  account={account}
+                  isRemoving={removingAccountId === account.id}
+                  onRemove={(acct) =>
+                    setAccountToRemove({ id: acct.id, handle: acct.handle })
+                  }
+                />
+              ))}
+            </Accordion>
+          </div>
+        ) : null}
+        {/* The inverted CTA the redesign uses for every primary action —
+            white-on-black in dark, black-on-white in light. --primary is
+            magenta, which fought the monochrome card. Same link, same flow,
+            same behaviour on click. */}
+        <Link
+          to={`/verification/flow?platform=${platform}`}
+          className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-foreground py-3.5 font-mono text-xs font-extrabold uppercase tracking-[0.18em] text-background transition-transform duration-200 hover:scale-[0.98]"
+        >
+          <Plus className="h-4 w-4" />
+          Add account
+        </Link>
+      </CardContent>
+      <AlertDialog
+        open={Boolean(accountToRemove)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setAccountToRemove(null);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove this verified account?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {accountToRemove
+                ? `This will disconnect @${accountToRemove.handle} from Atomik Clips. You can always re-verify later.`
+                : "This will disconnect the selected account from Atomik Clips."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={removingAccountId !== null}>
+              Keep account
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                if (!accountToRemove) return;
+                const { id, handle } = accountToRemove;
+                setAccountToRemove(null);
+                await handleRemoveAccount(id, handle);
+              }}
+              disabled={removingAccountId !== null}
+            >
+              Remove account
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </Card>
+  );
+};

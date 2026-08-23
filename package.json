@@ -1,0 +1,32 @@
+{
+  "name": "atomik-clips-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter frontend dev",
+    "build": "pnpm --filter frontend build",
+    "build:dev": "pnpm --filter frontend build:dev",
+    "lint": "pnpm --filter frontend lint",
+    "preview": "pnpm --filter frontend preview",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "dev:all": "pnpm dev:frontend & pnpm dev:backend",
+    "build:frontend": "pnpm --filter frontend build",
+    "build:backend": "pnpm --filter backend build",
+    "build:all": "pnpm build:frontend && pnpm build:backend",
+    "lint:frontend": "pnpm --filter frontend lint",
+    "lint:backend": "pnpm --filter backend lint",
+    "lint:all": "pnpm lint:frontend && pnpm lint:backend",
+    "type-check:frontend": "pnpm --filter frontend type-check",
+    "type-check:backend": "pnpm --filter backend type-check",
+    "type-check:all": "pnpm type-check:frontend && pnpm type-check:backend"
+  },
+  "devDependencies": {
+    "pnpm": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

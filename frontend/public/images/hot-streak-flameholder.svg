@@ -1,0 +1,19 @@
+<svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="flameholderGradient" x1="13" y1="10" x2="75" y2="78" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF944C" />
+      <stop offset="1" stop-color="#FF3868" />
+    </linearGradient>
+  </defs>
+  <rect width="88" height="88" rx="24" fill="url(#flameholderGradient)" />
+  <path
+    d="M44 16C44 16 56 29.5 56 42.5C56 55.5 48.5 63 44 68C39.5 63 32 55.5 32 42.5C32 29.5 44 16 44 16Z"
+    fill="white"
+    fill-opacity="0.9"
+  />
+  <path
+    d="M44 30C44 30 50 36.5 50 43.5C50 50.5 46.5 54.5 44 57.5C41.5 54.5 38 50.5 38 43.5C38 36.5 44 30 44 30Z"
+    fill="#FF6B2C"
+    fill-opacity="0.85"
+  />
+</svg>

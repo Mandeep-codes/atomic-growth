@@ -1,0 +1,340 @@
+/* Inter, not Cormorant Garamond. --font-sans was pointing at a SERIF display
+   face, which is why every screen — headings, body, labels, buttons — read as
+   an editorial magazine rather than a product. Inter is a neutral grotesque in
+   the Helvetica Neue lineage: clean letterforms, strong hierarchy at small
+   sizes, no decoration. JetBrains Mono stays for numerics and labels, where a
+   monospace genuinely helps figures line up. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400..800&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Dark mode as default with subtle design improvements */
+
+@layer base {
+  :root {
+    --background: 210 16.6667% 97.6471%;
+    --foreground: 240 41.4634% 8.0392%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 41.4634% 8.0392%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 41.4634% 8.0392%;
+    /* Monochrome by design: the CTA is the inverse of the page, not a hue.
+       Every accent colour in the old palette (violet primary, magenta ring,
+       spring-green accent) fought the black-and-white redesign, and because
+       shadcn resolves every button, ring and badge through these tokens,
+       changing them here restyles the whole app at once. */
+    --primary: 240 41.4634% 8.0392%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 6% 94%;
+    --secondary-foreground: 240 41.4634% 8.0392%;
+    --muted: 240 6% 95.5%;
+    --muted-foreground: 240 5% 45%;
+    --accent: 240 6% 94%;
+    --accent-foreground: 240 41.4634% 8.0392%;
+    --destructive: 14.3529 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 88%;
+    --input: 240 6% 88%;
+    --ring: 240 41.4634% 8.0392%;
+    --chart-1: 312.9412 100% 50%;
+    --chart-2: 273.8824 100% 50%;
+    --chart-3: 186.1176 100% 50%;
+    --chart-4: 168 100% 50%;
+    --chart-5: 54.1176 100% 50%;
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 240 41.4634% 8.0392%;
+    --sidebar-primary: 240 41.4634% 8.0392%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 6% 94%;
+    --sidebar-accent-foreground: 240 41.4634% 8.0392%;
+    --sidebar-border: 240 6% 88%;
+    --sidebar-ring: 240 41.4634% 8.0392%;
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-mono: "JetBrains Mono", "Space Mono", ui-monospace, SFMono-Regular,
+      Menlo, Consolas, monospace;
+    /* Bento: 24px corners are the single loudest signal of the new look. */
+    --radius: 1.5rem;
+    --shadow-x: 0px;
+    --shadow-y: 4px;
+    --shadow-blur: 8px;
+    --shadow-spread: -2px;
+    --shadow-opacity: 0.1;
+    --shadow-color: hsl(0 0% 0%);
+    --shadow-2xs: 0px 4px 8px -2px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0px 4px 8px -2px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0px 4px 8px -2px hsl(0 0% 0% / 0.1),
+      0px 1px 2px -3px hsl(0 0% 0% / 0.1);
+    --shadow: 0px 4px 8px -2px hsl(0 0% 0% / 0.1),
+      0px 1px 2px -3px hsl(0 0% 0% / 0.1);
+    --shadow-md: 0px 4px 8px -2px hsl(0 0% 0% / 0.1),
+      0px 2px 4px -3px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0px 4px 8px -2px hsl(0 0% 0% / 0.1),
+      0px 4px 6px -3px hsl(0 0% 0% / 0.1);
+    --shadow-xl: 0px 4px 8px -2px hsl(0 0% 0% / 0.1),
+      0px 8px 10px -3px hsl(0 0% 0% / 0.1);
+    --shadow-2xl: 0px 4px 8px -2px hsl(0 0% 0% / 0.25);
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
+  }
+
+  .dark {
+    /* THE redesign surface: pure black page, #111 cards, white-on-black CTA.
+       Matches the Atomik logo (white atom on black) and the AI Studio design
+       one-for-one. */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 6.7%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 6.7%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 9%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 0 0% 14%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 14.3529 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+    /* ~rgba(255,255,255,0.1) flattened against black — the tokens are opaque
+       HSL triples, so the design's translucent hairline has to be baked in. */
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 0 0% 100%;
+    --chart-1: 312.9412 100% 50%;
+    --chart-2: 273.8824 100% 50%;
+    --chart-3: 186.1176 100% 50%;
+    --chart-4: 168 100% 50%;
+    --chart-5: 54.1176 100% 50%;
+    --sidebar: 0 0% 4%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 12%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 16%;
+    --sidebar-ring: 0 0% 100%;
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-mono: "JetBrains Mono", "Space Mono", ui-monospace, SFMono-Regular,
+      Menlo, Consolas, monospace;
+    --radius: 1.5rem;
+    --shadow-x: 0px;
+    --shadow-y: 4px;
+    --shadow-blur: 8px;
+    --shadow-spread: -2px;
+    --shadow-opacity: 0.1;
+    --shadow-color: hsl(0 0% 0%);
+    --shadow-2xs: 0px 4px 8px -2px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0px 4px 8px -2px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0px 4px 8px -2px hsl(0 0% 0% / 0.1),
+      0px 1px 2px -3px hsl(0 0% 0% / 0.1);
+    --shadow: 0px 4px 8px -2px hsl(0 0% 0% / 0.1),
+      0px 1px 2px -3px hsl(0 0% 0% / 0.1);
+    --shadow-md: 0px 4px 8px -2px hsl(0 0% 0% / 0.1),
+      0px 2px 4px -3px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0px 4px 8px -2px hsl(0 0% 0% / 0.1),
+      0px 4px 6px -3px hsl(0 0% 0% / 0.1);
+    --shadow-xl: 0px 4px 8px -2px hsl(0 0% 0% / 0.1),
+      0px 8px 10px -3px hsl(0 0% 0% / 0.1);
+    --shadow-2xl: 0px 4px 8px -2px hsl(0 0% 0% / 0.25);
+  }
+
+  body {
+    letter-spacing: var(--tracking-normal);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    /* font-sans applied explicitly. It was never set here, so body fell back to
+       the browser default (Times) and every element that did not carry its own
+       font class inherited a serif. */
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    min-height: 100vh;
+    /* Back to 16px. The 17px bump existed only to compensate for Cormorant
+       Garamond's small x-height; Inter has a normal one, so keeping the bump
+       would now make everything a size too large. */
+    font-size: 16px;
+  }
+
+  /* The redesign's page surface: a soft centre glow over a faint grid.
+     Fixed so it does not scroll away, and behind everything. Both layers are
+     built from the foreground colour at very low alpha, so the same rule
+     works in light and dark without a second definition. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: radial-gradient(
+        circle at 50% 0%,
+        hsl(var(--foreground) / 0.06) 0%,
+        transparent 60%
+      ),
+      linear-gradient(to right, hsl(var(--foreground) / 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--foreground) / 0.03) 1px, transparent 1px);
+    background-size: 100% 100%, 32px 32px, 32px 32px;
+  }
+
+  /* Headings carry weight and tight tracking — not italic, and not uppercase.
+     Both were doing decorative work: italic on 18 headings across the app made
+     every page read as an editorial pull-quote, and forcing uppercase destroyed
+     the word shapes that make a heading scannable. Hierarchy now comes from
+     size and weight, which is what the type is for. */
+  .display-heading {
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer components {
+  /* Subtle hover effects */
+  .hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Subtle card styling */
+  .card-subtle {
+    @apply bg-card border border-border shadow-md;
+    transition: all 0.2s ease;
+  }
+
+  /* Gentle button improvements */
+  .btn-gentle {
+    transition: all 0.2s ease;
+  }
+
+  .btn-gentle:hover {
+    transform: translateY(-1px);
+  }
+
+  /* Subtle focus states */
+  .focus-gentle:focus {
+    @apply ring-2 ring-primary/20 ring-offset-2;
+  }
+
+  /* Fiery outline for campaign cards where the clipper has a boosted
+     CPM group rate. Gradient ring lives on ::before (survives the card's
+     overflow-hidden); the outer glow is a drop-shadow filter, which paints
+     outside the border box without being clipped. Kept low-opacity and
+     slow so it reads as premium, not flashing. */
+  .cpm-boost-card {
+    position: relative;
+  }
+
+  /* The breathing halo: a STATIC two-layer box-shadow on its own layer
+     whose OPACITY fades in and out. Opacity animates on the compositor
+     (unlike drop-shadow/filter, which repaints in visible steps and reads
+     as fast pulsing), so the swell is perfectly gradual. Sits behind the
+     card's background: only the outside halo is visible. */
+  .cpm-boost-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow:
+      0 0 16px 2px hsl(25 96% 54% / 0.38),
+      0 0 42px 8px hsl(32 97% 60% / 0.22);
+    opacity: 0.25;
+    animation: cpm-boost-halo 14s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .cpm-boost-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: linear-gradient(
+      130deg,
+      hsl(43 96% 56% / 0.55),
+      hsl(25 95% 53% / 0.65),
+      hsl(0 84% 60% / 0.55),
+      hsl(25 95% 53% / 0.65),
+      hsl(43 96% 56% / 0.55)
+    );
+    background-size: 300% 300%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    animation: cpm-boost-border 24s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+
+
+  /* Bottom-left boosted-rate badge on those cards. */
+  .cpm-boost-badge {
+    background: linear-gradient(
+      120deg,
+      hsl(43 96% 50%),
+      hsl(25 95% 53%) 55%,
+      hsl(0 84% 55%)
+    );
+    background-size: 220% 220%;
+    box-shadow: 0 2px 10px hsl(25 95% 53% / 0.35);
+    animation: cpm-boost-border 24s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cpm-boost-card,
+    .cpm-boost-card::before,
+    .cpm-boost-card::after,
+    .cpm-boost-badge {
+      animation: none;
+    }
+  }
+}
+
+@keyframes gradient {
+  to {
+    background-position: var(--bg-size, 300%) 0;
+  }
+}
+
+@keyframes cpm-boost-border {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes cpm-boost-halo {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+
+
+
+

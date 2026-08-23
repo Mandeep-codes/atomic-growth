@@ -1,0 +1,1 @@
+ALTER TABLE `balance_entries` MODIFY COLUMN `type` enum('reward','manual_adjustment','withdrawal','withdrawal_cancellation','withdrawal_refund') NOT NULL;

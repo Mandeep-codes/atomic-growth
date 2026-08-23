@@ -1,0 +1,1 @@
+ALTER TABLE `submissions` ADD `views_api_response` int DEFAULT 0 NOT NULL;

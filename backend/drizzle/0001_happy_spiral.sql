@@ -1,0 +1,1 @@
+ALTER TABLE `campaigns` ADD `demographics_verification_enabled` boolean DEFAULT false NOT NULL;

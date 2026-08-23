@@ -1,0 +1,1 @@
+ALTER TABLE `submissions` ADD `is_user_generated_content` boolean DEFAULT false NOT NULL;

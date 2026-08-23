@@ -1,0 +1,1 @@
+ALTER TABLE `referral_codes_v2` ADD `social_media_share_card_url` text;

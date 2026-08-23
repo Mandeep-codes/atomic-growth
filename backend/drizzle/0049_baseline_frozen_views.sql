@@ -1,0 +1,1 @@
+ALTER TABLE `submissions` ADD `baseline_frozen_views` int;

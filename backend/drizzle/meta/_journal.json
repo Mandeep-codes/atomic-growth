@@ -1,0 +1,447 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1766249823318,
+      "tag": "0000_perpetual_darkstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1766437688881,
+      "tag": "0001_happy_spiral",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1766438043222,
+      "tag": "0002_lethal_night_nurse",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1766456687268,
+      "tag": "0003_visible_countries",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1766781289074,
+      "tag": "0004_melodic_blue_shield",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1766844724266,
+      "tag": "0005_tricky_kabuki",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1767042337828,
+      "tag": "0006_campaign_levels",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1767048350397,
+      "tag": "0007_submission_snapshots",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1767108434836,
+      "tag": "0008_campaign_levels_additional_rewards_description",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1767122549405,
+      "tag": "0009_odd_smiling_tiger",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1767146764542,
+      "tag": "0010_resubmit_prevention_flag",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1767292628810,
+      "tag": "0011_wide_secret_warriors",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1767301824548,
+      "tag": "0012_purple_senator_kelly",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1767375008174,
+      "tag": "0013_cooing_agent_brand",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1767721945172,
+      "tag": "0014_tan_diamondback",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "5",
+      "when": 1767811530868,
+      "tag": "0015_free_victor_mancha",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "5",
+      "when": 1767900397799,
+      "tag": "0016_past_chronomancer",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "5",
+      "when": 1770496562474,
+      "tag": "0017_crazy_overlord",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1770732439585,
+      "tag": "0018_linkedin_reposts",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "5",
+      "when": 1770733245520,
+      "tag": "0019_influencer_campaign_aggregates",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1774894011075,
+      "tag": "0020_legal_screwball",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1775056994461,
+      "tag": "0021_familiar_morlocks",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "5",
+      "when": 1778093148288,
+      "tag": "0022_busy_the_phantom",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "5",
+      "when": 1780266170835,
+      "tag": "0023_chilly_mulholland_black",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "5",
+      "when": 1781729544544,
+      "tag": "0024_non_campaign_clips",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1781730000000,
+      "tag": "0025_non_campaign_video_id_case_sensitive",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1781818278960,
+      "tag": "0026_flaky_mattie_franklin",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "5",
+      "when": 1781927846795,
+      "tag": "0027_non_campaign_redemption_ledger",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "5",
+      "when": 1781929843184,
+      "tag": "0028_non_campaign_per_account_ledger",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "5",
+      "when": 1781933900937,
+      "tag": "0029_non_campaign_clip_review",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "5",
+      "when": 1782250276823,
+      "tag": "0030_sturdy_wind_dancer",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "5",
+      "when": 1782333142589,
+      "tag": "0031_non_campaign_snapshots",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "5",
+      "when": 1782564046415,
+      "tag": "0032_integrity_deletion_stableid",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "5",
+      "when": 1783024528642,
+      "tag": "0033_private_campaigns",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "5",
+      "when": 1783033508183,
+      "tag": "0034_deleted_clip_reserves",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "5",
+      "when": 1783034938638,
+      "tag": "0035_withdrawal_returned_status",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "5",
+      "when": 1783076777499,
+      "tag": "0036_discord_bot_token",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "5",
+      "when": 1783082915198,
+      "tag": "0037_application_reapply_history",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "5",
+      "when": 1783174684838,
+      "tag": "0038_melodic_matthew_murdock",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "5",
+      "when": 1783262836883,
+      "tag": "0039_moaning_thaddeus_ross",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "5",
+      "when": 1783368439280,
+      "tag": "0040_leaderboards_hosting",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "5",
+      "when": 1783378048069,
+      "tag": "0041_youtube_hosting_toggle",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "5",
+      "when": 1783379327948,
+      "tag": "0042_leaderboard_master_switch",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "5",
+      "when": 1783734552376,
+      "tag": "0043_crypto_payouts",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "5",
+      "when": 1783803477176,
+      "tag": "0044_breezy_captain_britain",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "5",
+      "when": 1784141299666,
+      "tag": "0045_per_campaign_view_floors",
+      "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "5",
+      "when": 1784157300569,
+      "tag": "0046_private_campaign_clarity",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "5",
+      "when": 1784306400369,
+      "tag": "0047_demographics_recording_period",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "5",
+      "when": 1784378706770,
+      "tag": "0048_discord_oauth_grants",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "5",
+      "when": 1784396979124,
+      "tag": "0049_baseline_frozen_views",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "5",
+      "when": 1784399333627,
+      "tag": "0050_reserve_reason",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "5",
+      "when": 1784841702821,
+      "tag": "0051_mod_alias_passwords",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "5",
+      "when": 1784842829131,
+      "tag": "0052_mod_alias_tag",
+      "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "5",
+      "when": 1785099809122,
+      "tag": "0053_submissions_paused",
+      "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "5",
+      "when": 1785182698961,
+      "tag": "0054_audit_log",
+      "breakpoints": true
+    },
+    {
+      "idx": 55,
+      "version": "5",
+      "when": 1785500383546,
+      "tag": "0055_closed_major_mapleleaf",
+      "breakpoints": true
+    },
+    {
+      "idx": 56,
+      "version": "5",
+      "when": 1785500436035,
+      "tag": "0056_amusing_gwen_stacy",
+      "breakpoints": true
+    },
+    {
+      "idx": 57,
+      "version": "5",
+      "when": 1785501332435,
+      "tag": "0057_skinny_magneto",
+      "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "5",
+      "when": 1785562208593,
+      "tag": "0058_fair_dakota_north",
+      "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "5",
+      "when": 1785697682658,
+      "tag": "0059_curved_sleepwalker",
+      "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "5",
+      "when": 1785717144386,
+      "tag": "0060_outstanding_lady_deathstrike",
+      "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "5",
+      "when": 1785900000000,
+      "tag": "0061_min_views_exemption",
+      "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "5",
+      "when": 1786100000000,
+      "tag": "0062_always_request_demographics",
+      "breakpoints": true
+    }
+  ]
+}

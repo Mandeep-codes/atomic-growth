@@ -1,0 +1,1 @@
+ALTER TABLE `wise_withdrawals` MODIFY COLUMN `status` enum('requested','pending','failed','completed','cancelled','returned') NOT NULL DEFAULT 'requested';

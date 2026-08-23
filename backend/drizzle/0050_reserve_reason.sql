@@ -1,0 +1,1 @@
+ALTER TABLE `deleted_clip_reserves` ADD `reason` varchar(40);

@@ -1,0 +1,1 @@
+ALTER TABLE `site_settings` ADD `discord_bot_token` text;

@@ -1,0 +1,1 @@
+ALTER TABLE `wise_withdrawals` MODIFY COLUMN `external_transfer_id` varchar(255);

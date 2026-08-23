@@ -1,0 +1,1 @@
+ALTER TABLE `campaigns` ADD `demographics_min_views` int DEFAULT 0 NOT NULL;

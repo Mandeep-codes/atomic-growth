@@ -1,0 +1,1 @@
+ALTER TABLE `verified_login_credentials` ADD `mod_alias_tag` varchar(100);

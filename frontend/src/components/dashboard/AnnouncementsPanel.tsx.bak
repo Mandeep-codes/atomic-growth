@@ -1,0 +1,178 @@
+import { Badge, Card, Empty, Label, Loading, SectionTitle } from "@/components/ds";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useAuth } from "@/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
+import { cn } from "@/lib/utils";
+import type { inferRouterOutputs } from "@trpc/server";
+import { formatDistanceToNow } from "date-fns";
+import { AlertTriangle, ChevronRight, Megaphone } from "lucide-react";
+import { useState } from "react";
+import type { AppRouter } from "../../../../backend/src/routers";
+
+type Announcement =
+  inferRouterOutputs<AppRouter>["notifications"]["getAnnouncements"][number];
+
+// Only the two tones the announcement metadata can carry today.
+const TONE = {
+  announcement: {
+    label: "Announcement",
+    icon: Megaphone,
+    badge: "neutral" as const,
+  },
+  "issue-alert": {
+    label: "Issue alert",
+    icon: AlertTriangle,
+    badge: "warning" as const,
+  },
+};
+
+const toneOf = (a: Announcement) =>
+  TONE[(a.metadata?.type as keyof typeof TONE) ?? "announcement"] ??
+  TONE.announcement;
+
+/**
+ * Dashboard announcements: the current one in full, everything older listed
+ * beneath it, and any of them openable as a full message.
+ *
+ * Reads notifications.getAnnouncements and nothing else — the server already
+ * drops dismissed rows and anything past its expires_minutes window, so this
+ * shows exactly what that procedure returns, in its order.
+ *
+ * NOTE: there is no author on an announcement. The table has id, title,
+ * description, metadata, expires_minutes, dismissed_at, created_at — no
+ * posted-by column and nothing in metadata carries one. So "who posted it"
+ * cannot be shown without a schema change; the date is shown, the author is
+ * not invented.
+ */
+export const AnnouncementsPanel = () => {
+  const { user } = useAuth();
+  const { data, isLoading, error } =
+    trpc.notifications.getAnnouncements.useQuery(undefined, {
+      enabled: Boolean(user),
+    });
+  const [open, setOpen] = useState<Announcement | null>(null);
+
+  if (!user || error) return null;
+
+  const announcements = data ?? [];
+  const [latest, ...older] = announcements;
+
+  return (
+    <section className="space-y-6">
+      <SectionTitle
+        meta={
+          announcements.length
+            ? `${announcements.length} ${
+                announcements.length === 1 ? "post" : "posts"
+              }`
+            : undefined
+        }
+      >
+        Announcements
+      </SectionTitle>
+
+      {isLoading ? (
+        <Loading label="Loading announcements" />
+      ) : announcements.length === 0 ? (
+        <Empty>Nothing announced right now. New campaigns and payout
+        updates will show up here.</Empty>
+      ) : (
+        <div className="space-y-3">
+          {/* Latest, opened out — the one thing worth reading now. */}
+          {latest ? (
+            <Card className="p-5">
+              <button
+                type="button"
+                onClick={() => setOpen(latest)}
+                className="w-full text-left"
+              >
+                <div className="flex items-start gap-4">
+                  <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-muted">
+                    {(() => {
+                      const Icon = toneOf(latest).icon;
+                      return <Icon className="h-4 w-4" />;
+                    })()}
+                  </span>
+
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge tone={toneOf(latest).badge}>
+                        {toneOf(latest).label}
+                      </Badge>
+                      <Label className="inline">
+                        {formatDistanceToNow(new Date(latest.createdAt), {
+                          addSuffix: true,
+                        })}
+                      </Label>
+                    </div>
+                    <p className="text-base font-semibold">{latest.title}</p>
+                    <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+                      {latest.description}
+                    </p>
+                  </div>
+
+                  <ChevronRight className="mt-3 h-4 w-4 shrink-0 text-muted-foreground" />
+                </div>
+              </button>
+            </Card>
+          ) : null}
+
+          {/* Everything older, compact. */}
+          {older.length ? (
+            <Card className="divide-y divide-border">
+              {older.map((a) => {
+                const tone = toneOf(a);
+                const Icon = tone.icon;
+                return (
+                  <button
+                    key={a.id}
+                    type="button"
+                    onClick={() => setOpen(a)}
+                    className={cn(
+                      "flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors",
+                      "hover:bg-muted/40 focus-visible:outline-none focus-visible:bg-muted/40"
+                    )}
+                  >
+                    <Icon className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    <span className="min-w-0 flex-1 truncate text-sm">
+                      {a.title}
+                    </span>
+                    <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                      {formatDistanceToNow(new Date(a.createdAt), {
+                        addSuffix: true,
+                      })}
+                    </span>
+                    <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                  </button>
+                );
+              })}
+            </Card>
+          ) : null}
+        </div>
+      )}
+
+      <Dialog open={Boolean(open)} onOpenChange={(o) => !o && setOpen(null)}>
+        <DialogContent className="max-h-[85vh] max-w-lg overflow-y-auto rounded-3xl border-border bg-card">
+          {open ? (
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge tone={toneOf(open).badge}>{toneOf(open).label}</Badge>
+                <Label className="inline">
+                  {new Date(open.createdAt).toLocaleString()}
+                </Label>
+              </div>
+              <h2 className="display-heading text-2xl leading-tight">
+                {open.title}
+              </h2>
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/80">
+                {open.description}
+              </p>
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
+    </section>
+  );
+};
+
+export default AnnouncementsPanel;

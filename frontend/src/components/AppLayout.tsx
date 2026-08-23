@@ -1,0 +1,55 @@
+import { ReactNode, createContext, useContext } from "react";
+import { DemoBanner } from "./DemoBanner";
+import { ProductTour } from "./ProductTour";
+import { TopNav } from "./TopNav";
+
+interface AppLayoutProps {
+  children: ReactNode;
+}
+
+// Every clipper page wraps ITSELF in <AppLayout>. That is fine while each one
+// owns a route, but the single-page dashboard renders those same pages as
+// sections — which would nest a top bar and a <main> inside another one.
+// Rather than strip the wrapper out of seven large pages (and risk breaking
+// their standalone routes, which still need to work for deep links), a nested
+// AppLayout detects the outer one and renders its children bare.
+const InsideAppLayout = createContext(false);
+
+// True when this page is being rendered as a SECTION of another page rather
+// than as its own route. A page that redirects on mount must check this: the
+// dashboard stacks whole pages inline, so an unguarded redirect fires while the
+// user is on "/" and drags the entire app to that page's route.
+export const useInsideAppLayout = () => useContext(InsideAppLayout);
+
+/**
+ * THE SIDEBAR IS GONE.
+ *
+ * It used to render for staff only (`roles.length > 0`), so clippers already
+ * saw nothing but this bar — worth knowing, because the confusion the client
+ * reported can only have come from a staff or dev account. Either way it is
+ * removed for everyone now, and TopNav carries navigation instead: four links
+ * inline, the rest behind a menu, the admin tree behind its own.
+ *
+ * Removed with it: SidebarProvider, AppSidebar, MobileFloatingNav, and the
+ * open/showSidebar state that existed only to drive them. AppSidebar.tsx and
+ * MobileFloatingNav.tsx are now unreferenced and can be deleted; the nav model
+ * they held lives in lib/navItems.ts.
+ */
+export function AppLayout({ children }: AppLayoutProps) {
+  const nested = useContext(InsideAppLayout);
+
+  if (nested) {
+    return <>{children}</>;
+  }
+
+  return (
+    <InsideAppLayout.Provider value={true}>
+      <div className="flex min-h-screen w-full flex-col">
+        <DemoBanner />
+        <TopNav />
+        <main className="flex-1 overflow-auto">{children}</main>
+        <ProductTour />
+      </div>
+    </InsideAppLayout.Provider>
+  );
+}

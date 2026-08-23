@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.turbo/
+*.log
+
+# Secrets — never commit. Every value lives in the host's dashboard.
+.env
+.env.*
+!.env.example
+!frontend/.env.production

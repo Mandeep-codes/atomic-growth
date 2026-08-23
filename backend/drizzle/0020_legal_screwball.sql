@@ -1,0 +1,1 @@
+ALTER TABLE `submissions` ADD `max_view_cap` int;

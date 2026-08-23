@@ -1,0 +1,1 @@
+ALTER TABLE `campaigns` ADD `clipper_activity_enabled` boolean DEFAULT true NOT NULL;

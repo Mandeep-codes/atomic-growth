@@ -1,0 +1,2 @@
+ALTER TABLE `campaigns` ADD `demographics_recording_period_days` int;--> statement-breakpoint
+CREATE INDEX `demographics_verifications_v2_account_status_idx` ON `demographics_verifications_v2` (`verified_user_id`,`user_id`,`status`,`updated_at`);
