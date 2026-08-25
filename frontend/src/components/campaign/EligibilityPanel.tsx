@@ -1,5 +1,7 @@
 import { Badge, Button, Card, Label } from "@/components/ds";
 import { useToast } from "@/hooks/use-toast";
+import { ConnectAccountDialog } from "./ConnectAccountDialog";
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
 import {
@@ -71,6 +73,7 @@ export const EligibilityPanel = ({ campaignId, isPrivate, ended }: Props) => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const utils = trpc.useUtils();
+  const [connectOpen, setConnectOpen] = useState(false);
 
   const state = trpc.privateCampaigns.getApplicationState.useQuery(
     { campaignId },
@@ -169,10 +172,18 @@ export const EligibilityPanel = ({ campaignId, isPrivate, ended }: Props) => {
           Waiting on review
         </Button>
       ) : !hasAccount ? (
-        <Button variant="secondary" block asChild={false} onClick={() => navigate("/verification")}>
-          Connect an account
-          <ArrowRight className="h-4 w-4" />
-        </Button>
+        <>
+          {/* Was navigate("/verification") - a redirect out of the campaign at
+              the exact moment someone decided they wanted in. Now it opens over
+              the page and the apply continues itself. */}
+          <Button variant="secondary" block onClick={() => setConnectOpen(true)}>
+            Connect an account
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+          <p className="text-center text-[11px] text-muted-foreground">
+            Takes about a minute. You stay on this campaign.
+          </p>
+        </>
       ) : (
         <>
           <Button
@@ -199,6 +210,15 @@ export const EligibilityPanel = ({ campaignId, isPrivate, ended }: Props) => {
           Manage verified accounts
         </Link>
       ) : null}
+
+      <ConnectAccountDialog
+        open={connectOpen}
+        onOpenChange={setConnectOpen}
+        onConnected={() => {
+          // Straight into the apply they were already trying to make.
+          apply.mutate({ campaignId });
+        }}
+      />
     </Card>
   );
 };

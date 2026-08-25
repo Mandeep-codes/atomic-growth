@@ -291,7 +291,7 @@ export const ActiveCampaignsSection = ({
                     <div className="space-y-2">
                       <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.18em]">
                         <span className="text-muted-foreground">
-                          Pool claimed
+                          Campaign progress
                         </span>
                         <span className="font-bold text-foreground">
                           {progress.toFixed(1)}% full

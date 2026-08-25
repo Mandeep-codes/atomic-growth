@@ -8,3 +8,7 @@ dist/
 .env.*
 !.env.example
 !frontend/.env.production
+
+backend/.env
+frontend/.env.local
+*.zip

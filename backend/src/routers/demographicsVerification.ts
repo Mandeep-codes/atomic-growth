@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { autoClaimAfterApproval } from "../lib/auto-claim";
 import { SQL, and, asc, count, desc, eq, gte, inArray, isNull, like, ne, or, sql } from "drizzle-orm";
 import { z } from "zod";
 
@@ -1090,6 +1091,13 @@ export const demographicsVerificationRouter = router({
       // or reset in the meantime has null/stale parsed_data, and flipping it to
       // 'approved' without the audience would silently drop that account from
       // its campaign's US% rollup (the rollup skips null-parsed_data rows).
+      // Approval is what releases the hold, so it is also when the withdrawal
+      // gets raised - the clipper no longer presses Claim. Best-effort and
+      // awaited but never fatal: see lib/auto-claim.ts for every skip case.
+      if (input.status === "approved" && existing.userId) {
+        await autoClaimAfterApproval(existing.userId);
+      }
+
       if (input.status === "approved" || input.status === "rejected") {
         const fanOutSet: Record<string, unknown> = {
           ...updateData,

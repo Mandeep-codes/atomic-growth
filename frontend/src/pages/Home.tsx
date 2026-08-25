@@ -163,19 +163,10 @@ const Home = () => {
       <div className="max-w-6xl mx-auto px-6 py-6 space-y-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-2 w-full">
-            {/* The indigo→purple gradient was the last coloured element on
-                the page and read as a different product from the rest of the
-                redesign. Monochrome display type instead. */}
-            <h1 className="display-heading text-4xl leading-none sm:text-6xl">
-              {user
-                ? `Welcome back, ${user.user_metadata.display_name || "Creator"}`
-                : "Atomik Clips"}
-            </h1>
-            <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-              {user
-                ? "Continue creating and earning with your clips."
-                : "Create clips, earn rewards, and join our creator community."}
-            </p>
+            {/* Heading removed: it filled the entire first screen with a
+                greeting and no information. Announcements and stats start at
+                the top of the viewport instead. The ban alert below stays -
+                it is the one thing that must interrupt. */}
             <div className="space-y-4">
               {banStatus ? (
                 <Alert variant="destructive">

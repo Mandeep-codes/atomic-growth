@@ -69,7 +69,7 @@ export const CAMPAIGNS = [
     title: "Airwallex x Atomik Clips",
     description:
       "Clip the founder interviews and product walkthroughs. Keep captions on, keep it under 60 seconds, and do not use the logo as a thumbnail.",
-    imageUrl: "",
+    imageUrl: "https://picsum.photos/seed/atomik-airwallex/1600/900",
     platforms: "youtube,instagram,tiktok",
     budget: 12000,
     min_payout: 5,
@@ -94,7 +94,7 @@ export const CAMPAIGNS = [
     title: "Nyne AI x Atomik Clips",
     description:
       "Short-form cuts from the Nyne AI podcast. US-heavy audiences earn a geo bonus on top of the base rate.",
-    imageUrl: "",
+    imageUrl: "https://picsum.photos/seed/atomik-nyne/1600/900",
     platforms: "youtube,instagram",
     budget: 8000,
     min_payout: 5,
@@ -119,7 +119,7 @@ export const CAMPAIGNS = [
     title: "Parloa x Atomik Clips",
     description:
       "We are promoting Parloa by distributing high-performing short-form clips across social platforms.",
-    imageUrl: "",
+    imageUrl: "https://picsum.photos/seed/atomik-parloa/1600/900",
     platforms: "youtube,instagram",
     visibility: "private",
     // Teaser values — what an UNapproved clipper sees. Once the application is
@@ -153,7 +153,7 @@ export const CAMPAIGNS = [
     title: "Slash x Atomik Growth",
     description:
       "Finished campaign. Kept here so the ended state has something to render.",
-    imageUrl: "",
+    imageUrl: "https://picsum.photos/seed/atomik-slash/1600/900",
     platforms: "youtube,instagram,x",
     active: false,
     ended: true,
@@ -381,7 +381,7 @@ export const applicationStatusOf = (campaignId: string) => {
 export const UNLOCKED_PRIVATE: Record<string, Record<string, unknown>> = {
   camp_parloa: {
     title: "Parloa x Atomik Clips",
-    imageUrl: "",
+    imageUrl: "https://picsum.photos/seed/atomik-c4/1600/900",
     budget: 9000,
     min_payout: 5,
     max_payout: 350,

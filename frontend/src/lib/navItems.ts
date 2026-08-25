@@ -2,6 +2,7 @@ import {
   Activity, BadgeCheck, Ban, Banknote, BarChart3, ClipboardCheck, Coins,
   FileText, Gamepad2, Gift, Globe, Home, ListOrdered, Lock, Megaphone,
   Rows2, Send, Shield, ShieldAlert, Trash2, UserCog, UserPlus, Users,
+  Video,
   Wallet, Wrench, type LucideIcon,
 } from "lucide-react";
 
@@ -26,16 +27,38 @@ export type NavItem = {
 // Five is the practical ceiling at this label length. A sixth, or a longer
 // title, will start crowding the wallet balance before the lg breakpoint
 // collapses the row into the menu.
+// THREE destinations, not six. Everything a clipper does is one path - find a
+// campaign, submit clips to it, get paid - so those are the only things that
+// earn a permanent slot.
+//
+// "Home" is gone from the bar: the wordmark already links to "/", the
+// universal convention, so a second Home link spent a slot on something people
+// already know how to do.
+//
+// The rest moved to the menu. Every route still resolves, so links and
+// bookmarks keep working - they just stop competing for attention. Longer term
+// each gets absorbed into the flow that needs it (connect inside Apply,
+// audience data and payout method inside Earnings) rather than being a
+// destination at all.
 export const PRIMARY_NAV: NavItem[] = [
-  { title: "Home", icon: Home, path: "/", exact: true },
-  { title: "My Campaigns", icon: FileText, path: "/submissions", requiresAuth: true },
+  // Browse first - top of the funnel, and the only one that works signed out.
+  { title: "Campaigns", icon: FileText, path: "/explore" },
+  { title: "My Clips", icon: Video, path: "/submissions", requiresAuth: true },
   { title: "Earnings", icon: Coins, path: "/earnings", requiresAuth: true },
-  { title: "Receive Payments", icon: Banknote, path: "/bank-accounts", requiresAuth: true },
-  { title: "Social Verification", icon: BadgeCheck, path: "/verification", requiresAuth: true },
-  { title: "Demographic Verification", icon: Users, path: "/demographics-verification", requiresAuth: true, flag: "DEMOGRAPHICS_VERIFICATION" },
 ];
 
+// Setup and one-offs. Renamed out of internal vocabulary: nobody thinks of
+// their YouTube channel as a "social verification".
 export const SECONDARY_NAV: NavItem[] = [
+  { title: "Connected accounts", icon: BadgeCheck, path: "/verification", requiresAuth: true },
+  {
+    title: "Audience data",
+    icon: Users,
+    path: "/demographics-verification",
+    requiresAuth: true,
+    flag: "DEMOGRAPHICS_VERIFICATION",
+  },
+  { title: "Receive payments", icon: Banknote, path: "/bank-accounts", requiresAuth: true },
   { title: "Referrals", icon: UserPlus, path: "/referrals", requiresAuth: true },
 ];
 

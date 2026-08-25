@@ -58,11 +58,17 @@ const typeToBadge: Record<AnnouncementType, { label: string; variant: BadgeVaria
   "issue-alert": { label: "Issue alert", variant: "destructive" },
 };
 
+// "" means platform-wide - the historic behaviour and still the default.
+// Select uses "" as a sentinel rather than undefined so the control stays
+// controlled and the placeholder renders.
+const ALL_CAMPAIGNS = "";
+
 const defaultFormState = {
   title: "",
   description: "",
   type: announcementTypeOptions[0]!.value,
   expiresMinutes: "",
+  campaignId: ALL_CAMPAIGNS,
 };
 
 const AdminNotifications = () => {
@@ -77,6 +83,18 @@ const AdminNotifications = () => {
     isFetching,
     error,
   } = trpc.notifications.listAnnouncements.useQuery();
+
+  // Scoped posts only reach clippers who joined that campaign, so the picker
+  // lists live campaigns first - a post scoped to an ended campaign would be
+  // written and then seen by nobody.
+  const { data: campaigns } = trpc.campaigns.getAll.useQuery();
+  const campaignOptions = useMemo(() => {
+    const rows = campaigns ?? [];
+    return [
+      ...rows.filter((c) => c.active && !c.ended),
+      ...rows.filter((c) => c.ended),
+    ];
+  }, [campaigns]);
 
   const createAnnouncement = trpc.notifications.createAnnouncement.useMutation({
     onSuccess: async () => {
@@ -115,7 +133,7 @@ const AdminNotifications = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { title, description, type, expiresMinutes } = formState;
+    const { title, description, type, expiresMinutes, campaignId } = formState;
 
     if (!title.trim() || !description.trim()) {
       toast({
@@ -146,6 +164,9 @@ const AdminNotifications = () => {
       description: description.trim(),
       type,
       expiresMinutes: parsedExpiration,
+      // Omitted entirely when platform-wide, so the metadata written matches
+      // what every pre-existing announcement row looks like.
+      campaignId: campaignId || undefined,
     });
   };
 
@@ -250,6 +271,48 @@ const AdminNotifications = () => {
                             <span className="font-medium">{option.label}</span>
                             <span className="text-xs text-muted-foreground">
                               {option.description}
+                            </span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Audience</Label>
+                  <Select
+                    value={formState.campaignId}
+                    onValueChange={(next) =>
+                      setFormState((prev) => ({
+                        ...prev,
+                        campaignId: next === ALL_CAMPAIGNS ? ALL_CAMPAIGNS : next,
+                      }))
+                    }
+                    disabled={isSubmitting}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Everyone" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={ALL_CAMPAIGNS}>
+                        <div className="flex flex-col text-left">
+                          <span className="font-medium">Everyone</span>
+                          <span className="text-xs text-muted-foreground">
+                            Shown to every clipper, like the Discord posts
+                          </span>
+                        </div>
+                      </SelectItem>
+                      {campaignOptions.map((campaign) => (
+                        <SelectItem key={campaign.id} value={campaign.id}>
+                          <div className="flex flex-col text-left">
+                            <span className="font-medium">
+                              {campaign.title || "Untitled campaign"}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {campaign.ended
+                                ? "Ended - only past participants will see this"
+                                : "Only clippers who joined this campaign"}
                             </span>
                           </div>
                         </SelectItem>

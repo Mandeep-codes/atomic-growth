@@ -18,6 +18,9 @@ interface SubmissionStep1Props {
   // Campaign reels #2..N (reel #1 is the detection input / ctx.contentUrl).
   extraCampaignUrls?: string[];
   onExtraCampaignUrlsChange?: (urls: string[]) => void;
+  /** Per-platform rate and per-clip view minimum, keyed by platform id. */
+  rateByPlatform?: Record<string, number | null | undefined>;
+  minViewsByPlatform?: Record<string, number | null | undefined>;
 }
 
 export const SubmissionStep1 = ({
@@ -26,6 +29,8 @@ export const SubmissionStep1 = ({
   nonCampaignRequired = 0,
   extraCampaignUrls = [],
   onExtraCampaignUrlsChange,
+  rateByPlatform,
+  minViewsByPlatform,
 }: SubmissionStep1Props) => {
   const { isSignedIn } = useUser();
   const navigate = useNavigate();
@@ -255,6 +260,42 @@ export const SubmissionStep1 = ({
           </p>
         ) : platformError ? (
           <p className="text-xs text-destructive">{platformError}</p>
+        ) : detectedPlatform && detectedHandle && rateByPlatform ? (
+          /* What this specific clip is worth, BEFORE sending it. The rate
+             varies per platform and the view minimum is per campaign, so a
+             clipper had no way to know either without opening the campaign in
+             another tab - and a clip under the minimum earns nothing at all,
+             which is the worst thing to discover after posting. */
+          (() => {
+            const rate = Number(rateByPlatform[detectedPlatform] ?? 0);
+            const min = Number(minViewsByPlatform?.[detectedPlatform] ?? 0);
+            if (!rate && !min) return null;
+            return (
+              <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 rounded-xl border border-border bg-muted/30 px-4 py-3">
+                {rate > 0 ? (
+                  <span className="text-sm">
+                    <span className="font-semibold">${rate.toFixed(2)}</span>
+                    <span className="text-muted-foreground">
+                      {" "}
+                      per 1,000 views on this account
+                    </span>
+                  </span>
+                ) : null}
+                {min > 0 ? (
+                  <span className="text-sm text-muted-foreground">
+                    Needs <span className="font-semibold text-foreground">
+                      {min.toLocaleString()}
+                    </span>{" "}
+                    views to earn anything
+                  </span>
+                ) : null}
+                <span className="w-full text-[11px] text-muted-foreground">
+                  Earning starts when a moderator approves the clip, not when
+                  you post it.
+                </span>
+              </div>
+            );
+          })()
         ) : detectedPlatform && !detectedHandle ? (
           <p className="text-xs text-destructive">
             We're unable to detect your user handle from your link

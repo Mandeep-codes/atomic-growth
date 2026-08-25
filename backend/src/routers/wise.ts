@@ -1122,6 +1122,11 @@ export const wiseRouter = router({
 });
 
 // In the interim, we do this first, but in the future a user should be able to on-demand create a withdrawal request.
+// Exported for lib/auto-claim.ts, which raises the same request automatically
+// once demographics approval releases a hold. Same function, aliased so the
+// call site reads clearly - all the row locking and hold-capping stays here.
+export { createWithdrawalRequests as createWithdrawalRequestsForUsers };
+
 async function createWithdrawalRequests(userId: string[]) {
   const userBalances = await db
     .select()

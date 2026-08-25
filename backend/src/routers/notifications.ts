@@ -187,14 +187,26 @@ export const notificationsRouter = router({
           .positive()
           .max(60 * 24 * 7)
           .optional(),
+        // Scope the post to a campaign. Stored in the existing metadata JSON
+        // column, so this needs NO migration. Unscoped posts stay
+        // platform-wide, exactly as before.
+        campaignId: z.string().optional(),
       })
     )
     .mutation(async ({ input }) => {
       const id = createId();
       const metadata: NotificationMetadata =
         input.type === "issue-alert"
-          ? { type: "issue-alert", alertType: "warning" }
-          : { type: "announcement", alertType: "info" };
+          ? {
+              type: "issue-alert",
+              alertType: "warning",
+              ...(input.campaignId ? { campaignId: input.campaignId } : {}),
+            }
+          : {
+              type: "announcement",
+              alertType: "info",
+              ...(input.campaignId ? { campaignId: input.campaignId } : {}),
+            };
 
       await db.insert(notification_announcements).values({
         id,

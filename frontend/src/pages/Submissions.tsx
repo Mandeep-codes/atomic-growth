@@ -166,6 +166,12 @@ const Submissions = () => {
     trpc.submissions.getMySubmissions.useQuery();
   const utils = trpc.useUtils();
   const { toast } = useToast();
+  // Queue depth + typical turnaround. Deliberately NOT auto-approval - review
+  // stays human - but a clip sitting in "pending" with no end date is unpaid
+  // work with no visible progress. Same numbers for everyone, so it caches
+  // server side and costs nothing per clipper.
+  const { data: reviewQueue } = trpc.stats.getReviewQueue.useQuery();
+
   const { data: campaignRewards, isLoading: isLoadingRewards } =
     trpc.rewards.getMyCampaignRewards.useQuery();
   const { data: campaignDetails } = useCampaignsData();
@@ -1272,6 +1278,30 @@ const Submissions = () => {
                               Note: {submission.rejectedReason ?? "-"}
                             </p>
                           )}
+                        {submission.status === "pending" && reviewQueue ? (
+                          <p className="mt-3 text-xs text-muted-foreground">
+                            {reviewQueue.pendingCount > 0
+                              ? `${reviewQueue.pendingCount.toLocaleString()} clip${
+                                  reviewQueue.pendingCount === 1 ? "" : "s"
+                                } in the review queue`
+                              : "Next in the review queue"}
+                            {reviewQueue.typicalHours
+                              ? ` \u00b7 usually reviewed within ${
+                                  reviewQueue.typicalHours < 24
+                                    ? `${reviewQueue.typicalHours}h`
+                                    : `${Math.round(
+                                        reviewQueue.typicalHours / 24
+                                      )} day${
+                                        Math.round(
+                                          reviewQueue.typicalHours / 24
+                                        ) === 1
+                                          ? ""
+                                          : "s"
+                                      }`
+                                }`
+                              : ""}
+                          </p>
+                        ) : null}
                       </div>
                     ))}
                   </div>

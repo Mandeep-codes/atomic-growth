@@ -39,10 +39,15 @@ export const notificationMetadataSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("issue-alert"),
     alertType: z.literal("warning"),
+    // Scopes the post to one campaign. Optional, so every row written before
+    // this existed still parses as a platform-wide announcement. Same shape the
+    // campaign-suspension variants below already use.
+    campaignId: z.string().optional(),
   }),
   z.object({
     type: z.literal("announcement"),
     alertType: z.literal("info"),
+    campaignId: z.string().optional(),
   }),
   // Rows written before alertType was added to these inserts lack the field —
   // .catch() supplies the default so they still parse. Keep in sync with
