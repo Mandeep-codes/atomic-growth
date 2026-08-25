@@ -44,7 +44,7 @@ export const CpmBoostBadge = ({ rate }: CpmBoostBadgeProps) => {
       <span
         role="button"
         tabIndex={0}
-        aria-label={`Boosted rate ${display} CPM — see details`}
+        aria-label={`Boosted rate ${display} per 1,000 views — see details`}
         onClick={(event) => {
           event.preventDefault();
           setOpen(true);
@@ -59,7 +59,7 @@ export const CpmBoostBadge = ({ rate }: CpmBoostBadgeProps) => {
         className="cpm-boost-badge absolute bottom-3 left-3 z-10 inline-flex cursor-pointer items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/60"
       >
         <Flame className="h-3 w-3" aria-hidden="true" />
-        {display} CPM
+        {display} per 1,000
       </span>
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -70,7 +70,7 @@ export const CpmBoostBadge = ({ rate }: CpmBoostBadgeProps) => {
               Boosted rate
             </DialogTitle>
             <DialogDescription>
-              You have {display} CPM for this campaign because you&apos;re part
+              You have {display} per 1,000 for this campaign because you&apos;re part
               of the {rate.groupName} group.
             </DialogDescription>
           </DialogHeader>

@@ -283,6 +283,18 @@ const Step2 = () => {
                 give one. */}
             <SubmissionStep1
               allowedPlatforms={campaignData?.allowedPlatforms}
+              rateByPlatform={{
+                youtube: campaignData?.youtube_per_1000,
+                instagram: campaignData?.insta_per_1000,
+                tiktok: campaignData?.tiktok_per_1000,
+                x: campaignData?.x_per_1000,
+              }}
+              minViewsByPlatform={{
+                youtube: campaignData?.youtube_min_views,
+                instagram: campaignData?.insta_min_views,
+                tiktok: campaignData?.tiktok_min_views,
+                x: campaignData?.x_min_views,
+              }}
             />
             <SubmissionStep3 />
           </div>

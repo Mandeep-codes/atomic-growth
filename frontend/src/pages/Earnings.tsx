@@ -89,9 +89,9 @@ const Earnings = () => {
           const title = metadata.campaignTitle || "Campaign reward";
           const subtitle = `${formatPlatformLabel(
             metadata.platform
-          )} +${metadata.viewDelta.toLocaleString()} views @ ${metadata.cpm.toFixed(
+          )} +${metadata.viewDelta.toLocaleString()} views at $${metadata.cpm.toFixed(
             2
-          )} CPM`;
+          )} per 1,000`;
           return { title, subtitle };
         }
         case "referral_reward": {
@@ -292,6 +292,13 @@ const Earnings = () => {
   // same rule; this is only here so the button matches the server.
   const weeklyGateBlocked = pendingAsks.length > 0;
 
+  // Approval now raises the withdrawal itself (backend: lib/auto-claim.ts), so
+  // the button is no longer the normal path - it is the fallback for the cases
+  // auto-claim deliberately skips. The one a clipper can fix is a missing
+  // payout method, so that gets its own action rather than a dead button.
+  const { data: payoutMethods } = trpc.bankAccounts.getAll.useQuery();
+  const hasPayoutMethod = (payoutMethods?.length ?? 0) > 0;
+
   const claimButtonDisabled =
     isLoadingDemographics ||
     gate.isLoading ||
@@ -393,23 +400,29 @@ const Earnings = () => {
                       Submit demographics
                     </Button>
                   ) : (
-                    <Button
-                      variant="default"
-                      size="sm"
-                      disabled={claimButtonDisabled}
-                      onClick={() => navigate("/earnings/claim")}
-                      title={
-                        weeklyGateBlocked
-                          ? "All of your balance is on hold pending campaign demographics."
-                          : awaitingReview
-                            ? "Your demographics are with a moderator. Nothing to do — the hold lifts once they're approved."
+/* No Claim button in the normal case. Approval releases the hold AND
+                       raises the withdrawal, so pressing anything is redundant -
+                       the only states left are ones the clipper either cannot
+                       act on (in review) or must fix first (no payout method). */
+                    !hasPayoutMethod && hasEnoughToClaim ? (
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={() => navigate("/bank-accounts")}
+                      >
+                        Add a payout method
+                      </Button>
+                    ) : (
+                      <p className="max-w-[16rem] text-right text-sm text-muted-foreground">
+                        {awaitingReview
+                          ? "Your audience data is with a moderator. Your balance is paid out automatically once it's approved."
+                          : weeklyGateBlocked
+                            ? "On hold pending audience data. Submit it below and this pays out automatically."
                             : outstandingWithdrawal
-                              ? "You already have a withdrawal in progress."
-                              : undefined
-                      }
-                    >
-                      {awaitingReview ? "In review" : "Claim 🎉"}
-                    </Button>
+                              ? "Payout requested. It goes out in the next payment run."
+                              : "Paid out automatically in the next payment run."}
+                      </p>
+                    )
                   )}
 
                   {/* The amber hold panel was removed here. It explained the

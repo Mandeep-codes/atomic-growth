@@ -104,6 +104,21 @@ export const CampaignDetailDialog = ({
   const displayImageUrl = unlocked?.imageUrl ?? campaign?.imageUrl;
   const displayBudget = unlocked?.budget ?? campaign?.budget ?? 0;
   const displayMinPayout = unlocked?.min_payout ?? campaign?.min_payout ?? 0;
+
+  // max_payout is a PERCENTAGE of the bounty (CampaignEdit labels it "Max
+  // Payout (% of bounty)"). Admins have always set it; no clipper-facing screen
+  // has ever read it, so the cap on a single clip was invisible. Resolve it to
+  // money here rather than making anyone do the arithmetic.
+  const maxPayoutPct = unlocked?.max_payout ?? campaign?.max_payout ?? 0;
+  const maxPayoutValue = (displayBudget * maxPayoutPct) / 100;
+
+  // Clippers filter hard on this - a nearly-drained campaign means posting for
+  // nothing. achievementPercentage is how much has been PAID OUT, so remaining
+  // is its complement.
+  const budgetLeftPct = Math.max(
+    0,
+    Math.min(100, 100 - (Number(campaign?.achievementPercentage) || 0))
+  );
   // View requirements have their own reveal toggle: a private campaign can
   // hide its CPM rates but still show how many views are needed.
   const hideMinViews =
@@ -190,7 +205,7 @@ export const CampaignDetailDialog = ({
       {/* Wider than 3xl: two columns in the old width left both halves too
           narrow to read, which is the usual way a split layout ends up worse
           than the stack it replaced. */}
-      <DialogContent className="max-w-5xl overflow-hidden rounded-[32px] border-0 p-0 shadow-2xl">
+      <DialogContent className="max-h-[92vh] w-[calc(100vw-1.5rem)] max-w-5xl overflow-y-auto rounded-3xl border-0 p-0 shadow-2xl sm:w-full sm:rounded-[32px]">
         {campaign ? (
           <div className="flex max-h-[85vh] flex-col">
             <div className="flex-1 space-y-10 overflow-y-auto px-8 py-10">
@@ -233,7 +248,7 @@ export const CampaignDetailDialog = ({
                   would just squeeze both. */}
               <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
               <section className="rounded-[28px] border border-border/40 bg-muted/30 p-6">
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid grid-cols-2 gap-5 sm:gap-6 lg:grid-cols-3">
                   <div className="space-y-1">
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                       Created
@@ -282,6 +297,65 @@ export const CampaignDetailDialog = ({
                       <p className="text-xs text-muted-foreground">
                         Revealed once you're approved
                       </p>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                      Max Per Clip
+                    </p>
+                    {hideBudget ? (
+                      <>
+                        <p className="text-lg font-semibold text-foreground">
+                          Hidden
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Revealed once you're approved
+                        </p>
+                      </>
+                    ) : maxPayoutPct > 0 ? (
+                      <>
+                        <p className="text-lg font-semibold text-foreground">
+                          {formatCurrency(maxPayoutValue)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          The most one clip can earn, however far it goes
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-lg font-semibold text-foreground">
+                          No cap
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          A single clip can earn the whole bounty
+                        </p>
+                      </>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                      Budget Left
+                    </p>
+                    {hideBudget ? (
+                      <>
+                        <p className="text-lg font-semibold text-foreground">
+                          Hidden
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Revealed once you're approved
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-lg font-semibold text-foreground">
+                          {budgetLeftPct.toFixed(0)}%
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {budgetLeftPct < 15
+                            ? "Nearly spent - clips may not earn"
+                            : "Of the bounty is still unclaimed"}
+                        </p>
+                      </>
                     )}
                   </div>
                   <div className="space-y-1">

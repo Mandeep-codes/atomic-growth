@@ -19,6 +19,7 @@ import { influencerSubmissionsRouter } from "./influencerSubmissions";
 import { clipperActivityRouter } from "./clipperActivity";
 import { privateCampaignsRouter } from "./privateCampaigns";
 import { siteSettingsRouter } from "./siteSettings";
+import { statsRouter } from "./stats";
 import { stableIdRouter } from "./stableIdBackfill";
 import { leaderboardRouter } from "./leaderboard";
 import { modAliasesRouter } from "./modAliases";
@@ -48,6 +49,7 @@ export const appRouter = router({
   referrals: referralsRouter,
   influencerSubmissions: influencerSubmissionsRouter,
   siteSettings: siteSettingsRouter,
+  stats: statsRouter,
   stableId: stableIdRouter,
 });
 
